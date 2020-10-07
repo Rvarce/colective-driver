@@ -1,0 +1,7 @@
+{
+  "name": "colective",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
