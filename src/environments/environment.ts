@@ -3,9 +3,20 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  getConductor: 'https://southamerica-east1-colective-api.cloudfunctions.net/api/colectivos/getConductor/'
 };
 
+export const firebaseConfig = {
+  apiKey: "AIzaSyBQJB6yhI9uQfxZ26tDnrJPku3CTik4ZrU",
+  authDomain: "colective-api.firebaseapp.com",
+  databaseURL: "https://colective-api.firebaseio.com",
+  projectId: "colective-api",
+  storageBucket: "colective-api.appspot.com",
+  messagingSenderId: "867773192940",
+  appId: "1:867773192940:web:fe5854a31f604e837623c9",
+  measurementId: "G-QZT4R7NVN8"
+};
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

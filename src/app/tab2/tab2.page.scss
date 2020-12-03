@@ -1,0 +1,81 @@
+.perfil {
+  width: 100%;
+  margin: auto;
+  top: 0px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.list-card {
+  width: 100%;
+  margin: auto;
+  top: 0px;
+}
+
+.item-trns {
+  border-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+}
+
+h1 {
+  padding-left: 8px;
+  padding-bottom: 1px;
+  color: azure;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+h2 {
+  margin-top: 25px; font-weight: bold;
+  font-size: 12px;
+}
+
+p.text-perfil {
+  padding-left: 8px;
+  // color: #434343;
+  font-size: 12px;
+  font-family: sans-serif;
+}
+
+.circle {
+  border-radius: 50%;
+  min-width: 90px;
+  min-height: 90px;
+  margin: auto;
+  margin-top: 7%;
+  margin-bottom: 5%;
+  text-align: center;
+  color: azure;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.first {
+  background-color: #50B2EA
+}
+
+.second {
+  background-color: #21DDCD;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.third {
+  background-color: #21BFDD
+}
+
+.label-list {
+  font-size: 14px;
+  font-family: sans-serif;
+}
+
+
+
+.price {
+  text-align: right;
+  font-size: 14px;
+  font-family: sans-serif;
+
+}

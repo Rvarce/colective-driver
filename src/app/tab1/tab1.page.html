@@ -1,17 +1,85 @@
-<ion-header [translucent]="true">
+<ion-content class="fondo" color="dark-light">
+  
+  <app-header (eventoCambiaEstado)="setEstado($event)"></app-header>
+  
+  
+  
+  
+  <app-active-map *ngIf="!estado"></app-active-map>
+    <div id="mapId" class="map"></div>
+
+
+  
+  <ion-fab *ngIf="estado" vertical="bottom" horizontal="start" slot="fixed">
+  
+    <ion-fab-button (click)="counterUpdate('mas')" color="light">
+      <ion-icon size="large" name="arrow-up-circle-outline"></ion-icon>
+    </ion-fab-button>
+  
+    <ion-fab-button (click)="counterUpdate('menos')" style="margin-top: 10px;" color="light">
+      <ion-icon size="large" name="arrow-down-circle-outline"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-button (click)="counterUpdate('reset')" style="margin-top: 10px;" color="calipse">
+      <ion-icon size="large" name="refresh-circle-outline"></ion-icon>
+    </ion-fab-button>
+  
+  </ion-fab>
+
+  <ion-fab *ngIf="estado" vertical="bottom" horizontal="center" slot="fixed" style="text-align: center;">
+    <p style="margin-bottom: 0%; color: #434343; font-size: 40px; font-family: 'Teko', sans-serif;">{{ counter }}</p>
+    <span style="margin-bottom: 0%; color: #434343;">Pasajeros</span>
+  </ion-fab>
+  
+  <ion-fab *ngIf="estado" vertical="bottom" horizontal="end" slot="fixed">
+
+    <ion-fab-button (click)="actualizaCupo('mas')" color="{{color}}">
+      <div class="cupos" [ngClass] = "actualizaClase()"></div>
+      <ion-icon size="large" name="car-sport-outline"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-button (click)="actualizaCupo('reset')" style="margin-top: 10px;" color="calipse">
+      <ion-icon size="large" name="refresh-circle-outline"></ion-icon>
+    </ion-fab-button>
+  
+  </ion-fab>
+</ion-content>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Capacitor Geolocation
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-button size="small" (click)="requestPermissions()">
+    Geolocation Permissions
+  </ion-button>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
-</ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-button size="small" (click)="getCurrentCoordinate()">
+        Current Coordinate
+      </ion-button>
+    </ion-card-header>
+    <ion-card-content>
+      Lat: {{coordinate?.lat }}
+      Long:{{ coordinate?.lng }}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-button size="small" (click)="watchPosition()">
+        Watch Position
+      </ion-button>
+    </ion-card-header>
+    <ion-card-content>
+      Lat: {{watchCoordinate?.lat }}
+      Long: {{ watchCoordinate?.lng }}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button size="small" (click)="clearWatch()">Clear Watch</ion-button>
+</ion-content> -->

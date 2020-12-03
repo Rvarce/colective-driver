@@ -1,0 +1,99 @@
+<ion-content>
+  <ion-toolbar color="dark-light">
+
+    <ion-fab vertical="top" slot="end" style="position:inherit;">
+      <ion-fab-button color="light" size="small" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ion-toolbar>
+  <ion-list *ngIf="opcion == 'perfil'">
+    <ion-list-header>
+      <h1>Perfil</h1>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Nombre</ion-label>
+      <ion-input readOnly>{{ perfil.nombre }}</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Apellidos</ion-label>
+      <ion-input readOnly>{{ perfil.apellidoPaterno }} {{ perfil.apellidoMaterno }}</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Direccion</ion-label>
+      <ion-input>{{ perfil.direccion }}</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Comuna</ion-label>
+      <ion-input>{{ perfil.comuna }}</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Ciudad</ion-label>
+      <ion-input>{{ perfil.ciudad }}</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Pais</ion-label>
+      <ion-input readOnly>{{ perfil.pais }}</ion-input>
+    </ion-item>
+    <ion-list-header>
+      <h1>Vehiculo</h1>
+    </ion-list-header>
+    <ion-item>
+      <ion-label position="stacked" color="turquesa">Marca</ion-label>
+      <ion-input readOnly>{{ vehiculo.marca }}</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="turquesa">Modelo</ion-label>
+      <ion-input readOnly>{{ vehiculo.modelo }}</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="turquesa">Patente</ion-label>
+      <ion-input readOnly>{{ vehiculo.patente }}</ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-list *ngIf="opcion == 'ingresos'">
+    <ion-list-header>
+      <h1>Ingresos</h1>
+    </ion-list-header>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Valor Pasaje</ion-label>
+      <ion-input [(ngModel)]="this.configIngresos.valorPasaje">$</ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Intervalos de tiempo</ion-label>
+      <ion-input [(ngModel)]="this.configIngresos.intervalo"></ion-input>
+
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="calipse">Otros</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-list *ngIf="opcion == 'gastos'">
+    <ion-list-header>
+      <h1>Gastos</h1>
+    </ion-list-header>
+    <ion-item>
+      <ion-label position="stacked" color="turquesa">Combustible</ion-label>
+      <ion-input [(ngModel)]="this.configGastos.combustible"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" color="turquesa">Entrega</ion-label>
+      <ion-input [(ngModel)]="this.configGastos.entrega"></ion-input>
+    </ion-item>
+    <ion-list-header>
+      <h1>Otros</h1>
+    </ion-list-header>
+    <ion-item *ngFor="let g of configGastos.otros">
+      <ion-label position="stacked" color="turquesa">{{ g.descripcion }}</ion-label>
+      <ion-input>{{ g.valor }}</ion-input>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
