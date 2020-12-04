@@ -4,6 +4,7 @@ import { Plugins, Capacitor, CallbackID } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import { ColectivoService } from "../services/colectivo.service";
 import { UbicacionesService } from "../services/ubicaciones.service";
+import { LoadingController } from "@ionic/angular";
 
 // import { Geolocation } from "@ionic-native/geolocation/ngx";
 // import "leaflet/dist/images/marker-shadow.png";
@@ -43,7 +44,8 @@ export class Tab1Page implements OnInit {
   constructor(
     private zone: NgZone,
     private colectivoService: ColectivoService,
-    private ubicacionesService: UbicacionesService
+    private ubicacionesService: UbicacionesService,
+    public loadingController: LoadingController
     // private geo: Geolocation
   ) { }
 
@@ -55,15 +57,14 @@ export class Tab1Page implements OnInit {
     this.estado = false
     this.requestPermissions()
     this.watchPosition()
-    // this.getCoordenadasPasajeros()
-    // .then( coords => this.loadZones(coords))
-    //       .catch(err => console.error(err))
+    this.getContador()
+
   }
 
   ionViewDidEnter() {
     if (this.watchCoordinate) {
       this.setEstado(this.estado)
-      this.loadMap();
+      
     }
   }
 
@@ -75,6 +76,18 @@ export class Tab1Page implements OnInit {
   async requestPermissions() {
     const permissionResult = await Plugins.Geolocation.requestPermissions()
     console.log('Permission result: ', permissionResult)
+  }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      cssClass: 'loading',
+      message: 'Espere mientras se cargas los datos...',
+      duration: 500
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
   }
 
   getCurrentCoordinate() {
@@ -144,17 +157,39 @@ export class Tab1Page implements OnInit {
 
     this.map.attributionControl.remove()
   }
+  getContador = () => {
+    let response
+    let promise = new Promise((resolve, reject) => {
+      this.colectivoService.getRentabilidad('2', 'giKWYPpFz0vWiOxmWCsu').subscribe(res => {
+
+        console.log('Respuesta contador ', res)
+        response = res
+        this.counter = response.numPasajeros
+        console.log('variable counter ', this.counter)
+
+      })
+
+    })
+    return promise
+  }
 
   counterUpdate(operation) {
     switch (operation) {
       case 'mas':
         this.counter++
         this.actualizaCupo('mas')
+        let date = new Date()
+        let day = date.getDate()
+        let fecha = (day < 10 ? '0' + day : day) + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
+        let hora = date.toLocaleTimeString()
+        let sendDate = { fecha, hora }
+        this.colectivoService.saveTime('2', sendDate)
         break;
       case 'menos':
         if (this.counter > 0) {
           this.counter--
           this.actualizaCupo('menos')
+          this.colectivoService.deleteLast('2')
         }
         break;
       case 'reset':
@@ -167,7 +202,7 @@ export class Tab1Page implements OnInit {
         break;
     }
 
-
+    this.colectivoService.updateCounter('2', 'giKWYPpFz0vWiOxmWCsu', this.counter)
   }
 
   actualizaCupo(op) {
@@ -217,9 +252,11 @@ export class Tab1Page implements OnInit {
 
   setEstado($estado) {
     if ($estado) {
-      this.getCoordenadasPasajeros()
-        // .then(coords => this.loadZones(coords))
-        .catch(err => console.error(err))
+      this.presentLoading()
+          .then(() => this.loadMap())
+          .then(() => this.getCoordenadasPasajeros())
+          // .then(coords => this.loadZones(coords))
+          .catch(err => console.error(err))
     }
     else {
       this.removeZone()
@@ -236,14 +273,15 @@ export class Tab1Page implements OnInit {
         console.log('ubicacion ', res.coordenadas)
 
         if (this.group != []) {
-          
+
           this.removeZone()
         }
         if (res) {
           res.coordenadas.forEach(coord => {
+            console.log('coord ', coord)
             this.group.push(circle([coord.lat, coord.lng], { radius: 80, stroke: false }).addTo(this.map))
           })
-         
+
           resolve()
         } else {
           reject('No hay coordenadas')

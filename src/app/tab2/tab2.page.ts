@@ -52,7 +52,7 @@ export class Tab2Page implements OnInit {
     }
 
   }
-  rentabilidad: any
+  rentabilidad: any   
   // rentabilidad: Rentabilidad = {
   //   horaTomaPasajeros: [
   //     {
@@ -140,11 +140,9 @@ export class Tab2Page implements OnInit {
         this.rentabilidad = res
         console.log('variable Rentabilidad ', this.rentabilidad)
 
-
       })
 
     })
-
     return promise
   }
 
