@@ -13,6 +13,7 @@ import { LoadingController } from "@ionic/angular";
 import "leaflet/dist/images/marker-car-shadow.png";
 import "leaflet/dist/images/marker-car.png";
 import { Ubicaciones } from '../interfaces/ubicaciones';
+import { Conductor } from '../interfaces/conductor';
 
 @Component({
   selector: 'app-tab1',
@@ -24,6 +25,7 @@ export class Tab1Page implements OnInit {
   newMarker: any
   address: string[]
   counter: number
+  income: number
   cupo: number
   color: string
   estado: boolean
@@ -40,7 +42,40 @@ export class Tab1Page implements OnInit {
       }
     ]
   }
+  conductor: Conductor = {
+    perfil: {
+      nombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
+      direccion: '',
+      comuna: '',
+      ciudad: '',
+      pais: '',
+      email: ''
+    },
+    vehiculo: {
+      dueño: false,
+      marcaVehiculo: '',
+      modeloVehiculo: '',
+      patenteVehiculo: ''
+    },
+    configIngresos: {
+      valorPasaje: 0,
+      intervalo: ''
+    },
+    configGastos: {
+      combustible: 0,
+      entrega: 0,
+      otros: [
+        {
+          descripcion: '',
+          valor: 0
+        }
+      ]
+    }
 
+  }
+  
   constructor(
     private zone: NgZone,
     private colectivoService: ColectivoService,
@@ -51,6 +86,7 @@ export class Tab1Page implements OnInit {
 
   ngOnInit() {
     this.counter = 0
+    this.income = 0
     this.cupo = 0
     this.color = 'light'
     this.group = []
@@ -58,7 +94,7 @@ export class Tab1Page implements OnInit {
     this.requestPermissions()
     this.watchPosition()
     this.getContador()
-
+    this.getConductor()
   }
 
   ionViewDidEnter() {
@@ -157,6 +193,20 @@ export class Tab1Page implements OnInit {
 
     this.map.attributionControl.remove()
   }
+
+  getConductor = () => {
+    let promise = new Promise((res, rej) => {
+      this.colectivoService.getConductor('2').subscribe(res => {
+        this.conductor = res['conductor']
+        console.log('Respuesta desde tab 1', res)
+        console.log(this.conductor)
+      })
+
+    })
+
+    return promise
+  }
+  
   getContador = () => {
     let response
     let promise = new Promise((resolve, reject) => {
@@ -176,7 +226,9 @@ export class Tab1Page implements OnInit {
   counterUpdate(operation) {
     switch (operation) {
       case 'mas':
+        console.log('total ingreso ', this.conductor.configIngresos.valorPasaje)
         this.counter++
+        this.income = this.counter * this.conductor.configIngresos.valorPasaje
         this.actualizaCupo('mas')
         let date = new Date()
         let day = date.getDate()
@@ -188,12 +240,14 @@ export class Tab1Page implements OnInit {
       case 'menos':
         if (this.counter > 0) {
           this.counter--
+          this.income = this.counter * this.conductor.configIngresos.valorPasaje
           this.actualizaCupo('menos')
           this.colectivoService.deleteLast('2')
         }
         break;
       case 'reset':
         this.counter = 0
+        this.income = 0
         break;
       case 'resetCount':
         this.cupo = 0
@@ -202,7 +256,7 @@ export class Tab1Page implements OnInit {
         break;
     }
 
-    this.colectivoService.updateCounter('2', 'giKWYPpFz0vWiOxmWCsu', this.counter)
+    this.colectivoService.updateCounter('2', 'giKWYPpFz0vWiOxmWCsu', this.counter, this.income)
   }
 
   actualizaCupo(op) {
@@ -281,8 +335,6 @@ export class Tab1Page implements OnInit {
             console.log('coord ', coord)
             this.group.push(circle([coord.lat, coord.lng], { radius: 80, stroke: false }).addTo(this.map))
           })
-
-          resolve()
         } else {
           reject('No hay coordenadas')
         }

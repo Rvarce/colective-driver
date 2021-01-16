@@ -4,6 +4,7 @@ import { Conductor } from "../interfaces/conductor";
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Rentabilidad } from '../interfaces/rentabilidad';
+import { Fecha } from '../interfaces/fecha';
 
 
 @Injectable({
@@ -41,8 +42,8 @@ export class ColectivoService {
     return this.conductorRef.doc(id).collection<Rentabilidad>('rentabilidad').doc(subId).valueChanges()
   }
 
-  updateCounter(id, subId, counter) {
-    this.conductorRef.doc(id).collection('rentabilidad').doc(subId).update({ numPasajeros: counter })
+  updateCounter(id, subId, counter, income) {
+    this.conductorRef.doc(id).collection('rentabilidad').doc(subId).update({ numPasajeros: counter, totalIngresos: income })
   }
 
   saveTime(id, date) {
@@ -56,18 +57,65 @@ export class ColectivoService {
     })
   }
 
-  deleteLast(id) {
+  getTimes(id) {
+    // return this.conductorCollection.doc(id).collection('fechas', ref => ref.where('fecha', '==' , '14/01/2021')).get().toPromise()
+    //   .then(res => {
+    //     res.forEach(doc => {
+    //       console.log('id', doc.id)
+    //       return this.conductorRef.doc(id).collection<Fecha>('fechas').doc(doc.id).valueChanges()
+    //     })
+    //     }
+    //   )
+    //   .catch(err => console.error('Ocurrio un problema al eliminar ultmo timestamp ', err))
 
+    return this.conductorRef.doc(id).collection<Fecha>('fechas', ref => ref.where('fecha', '==', '14/1/2021')).get().toPromise()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('No matching documents.');
+        return;
+      }
+  
+      snapshot.forEach(doc => {
+        // console.log(doc.id, '=>', doc.data());
+        return doc.data()
+      });
+    })
+    .catch(err => {
+      console.log('Error getting documents', err);
+    });
+  }
+
+  deleteLast(id) {
     this.conductorCollection.doc(id).collection('fechas', ref => ref.orderBy('timestamp', 'asc').limitToLast(1)).get().toPromise()
       .then(res => {
-          res.forEach(doc => {
-            console.log(doc.id)
-            this.conductorRef.doc(id).collection('fechas').doc(doc.id).delete()
-          })
-        }
+        res.forEach(doc => {
+          console.log(doc.id)
+          this.conductorRef.doc(id).collection('fechas').doc(doc.id).delete()
+        })
+      }
       )
       .catch(err => console.error('Ocurrio un problema al eliminar ultmo timestamp ', err))
 
+  }
+
+  actualizaDia(id) {
+    var rentabilidad: Rentabilidad
+    rentabilidad.timestamp = new Date()
+    rentabilidad.numPasajeros = 0
+    rentabilidad.totalGastos = 0
+    rentabilidad.totalIngresos = 0
+
+    this.conductorCollection.doc(id).collection('rentabilidad', ref => ref.orderBy('timestamp', 'asc').limitToLast(1)).get().toPromise()
+      .then(res => {
+        res.forEach(doc => {
+          console.log(doc)
+          if (!doc) {
+            this.conductorCollection.doc(id).collection('rentabilidad').add(rentabilidad)
+          } else {
+
+          }
+        })
+      })
   }
 
 }

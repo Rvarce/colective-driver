@@ -1,10 +1,5 @@
 export interface Rentabilidad {
-    horaTomaPasajeros: [
-        {
-            fecha: string,
-            hora: string
-        }
-    ],
+    timestamp: Date,
     numPasajeros: number,
     totalGastos: number,
     totalIngresos: number

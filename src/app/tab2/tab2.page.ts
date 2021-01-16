@@ -53,6 +53,7 @@ export class Tab2Page implements OnInit {
 
   }
   rentabilidad: any   
+  fechas: any
   // rentabilidad: Rentabilidad = {
   //   horaTomaPasajeros: [
   //     {
@@ -85,6 +86,7 @@ export class Tab2Page implements OnInit {
   ngOnInit() {
     this.getConductor().catch(err => console.log(err))
     this.getRentabilidad().catch(err => console.log(err))
+    this.getIngresos().catch(err => console.log(err))
 
     this.listGastos = [
       {
@@ -142,6 +144,17 @@ export class Tab2Page implements OnInit {
 
       })
 
+    })
+    return promise
+  }
+
+  getIngresos = () => {
+    let promise = new Promise((resolve, reject) => {
+      this.colectivoService.getTimes('2').then( res => {
+        // this.fechas = res
+        console.log('fechas tab2 ', res)
+      })
+      // resolve(this.fechas)
     })
     return promise
   }
@@ -219,5 +232,4 @@ export class Tab2Page implements OnInit {
 
     console.log(`Gastos ${this.sumaGastos}`)
   }
-
 }
